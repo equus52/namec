@@ -1,0 +1,22 @@
+// called from each project applying findbugs plugin
+apply plugin: 'findbugs'
+
+findbugs {
+  // version setting
+  toolVersion = '3.0.0'
+  
+  // effort setting
+  effort = 'max'
+  
+  // exclude filter setting
+  excludeFilter = file("${configurationDir}/findbugs/findbugs-excludeFilter.xml")
+}
+
+// ignore failures
+[findbugsMain, findbugsTest]*.ignoreFailures = true
+
+// eclipse settings
+eclipse.project {
+  natures 'edu.umd.cs.findbugs.plugin.eclipse.findbugsNature'
+  buildCommand 'edu.umd.cs.findbugs.plugin.eclipse.findbugsBuilder'
+}

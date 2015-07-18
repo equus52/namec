@@ -1,0 +1,10 @@
+apply from: 'configurations.gradle'
+apply from: 'gradle/java.gradle'
+apply from: 'gradle/eclipse.gradle'
+apply from: 'gradle/checkstyle.gradle'
+apply from: 'gradle/findbugs.gradle'
+
+dependencies {
+  compile 'com.google.code.findbugs:jsr305:2.0.1'
+  compile 'org.hamcrest:hamcrest-all:1.3'
+}

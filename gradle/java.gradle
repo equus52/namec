@@ -1,0 +1,84 @@
+// called from each project applying java plugin
+apply plugin: 'java'
+
+// encoding settings
+def defaultEncoding = 'UTF-8'
+tasks.withType(AbstractCompile) each { it.options.encoding = defaultEncoding }
+test.systemProperty 'file.encoding', defaultEncoding
+javadoc { options.encoding = defaultEncoding }
+
+// Java version settings
+sourceCompatibility = jdkVersion
+targetCompatibility = jdkVersion
+tasks.withType(AbstractCompile) { options.bootClasspath = "${System.getProperty("java.home")}/lib/rt.jar" }
+
+// java dirctory as resources directory settings
+sourceSets.main.resources.srcDirs 'src/main/java'
+sourceSets.test.resources.srcDirs 'src/test/java'
+// config dirctory as resources directory settings
+sourceSets.test.resources.srcDirs mainConfigPath
+
+test {
+  forkEvery = 1
+}
+
+// jar settings
+jar {
+  manifest {
+    attributes(
+    "Implementation-Title"      : project.name,
+    "Implementation-Version"    : productVersion
+    )
+  }
+}
+
+// sources jar settings
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+  manifest {
+    attributes(
+    "Implementation-Title"      : project.name,
+    "Implementation-Version"    : productVersion
+    )
+  }
+}
+artifacts { archives sourcesJar }
+
+// local dependencies settings
+dependencies {
+  compile fileTree(dir: 'lib/compile', include: '**/*.jar', exclude: '**/*-sources.jar')
+  runtime fileTree(dir: 'lib/runtime', include: '**/*.jar', exclude: '**/*-sources.jar')
+  testCompile fileTree(dir: 'lib/testCompile', include: '**/*.jar', exclude: '**/*-sources.jar')
+}
+
+// add depending projects' test sourceSets to test classpath
+compileTestJava {
+  doFirst {
+    project.getDependingProjects().each { dependingProject ->
+      project.sourceSets {
+        test.compileClasspath += dependingProject.sourceSets.test.output
+        test.runtimeClasspath += dependingProject.sourceSets.test.output
+
+        test.compileClasspath += dependingProject.sourceSets.test.compileClasspath
+        test.runtimeClasspath += dependingProject.sourceSets.test.runtimeClasspath
+      }
+    }
+  }
+}
+
+// copy environment config files for test
+processTestResources {
+  doLast {
+    project.getDependingAllProjects().each { project ->
+      copy {
+        from("${rootProject.buildDir}/${envRootName}/${defaultDir}/${project.name}")
+        into destinationDir
+      }
+      copy {
+        from("${rootProject.buildDir}/${envRootName}/${env}/${project.name}")
+        into destinationDir
+      }
+    }
+  }
+}

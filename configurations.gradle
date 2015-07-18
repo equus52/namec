@@ -1,0 +1,19 @@
+// configuration settings
+// called one time from root project
+
+ext {
+  // system
+  defaultEncoding = 'UTF-8'
+  
+  // product
+  productVersion = '0.0.1-SNAPSHOT'
+  configurationDir = new File(buildscript.sourceFile.parentFile, 'configuration')
+  mainConfigPath = 'src/main/config'
+
+  // Java
+  jdkVersion = '1.8'
+
+}
+
+// encoding settings
+System.properties['file.encoding'] = defaultEncoding

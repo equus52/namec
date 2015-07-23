@@ -4,7 +4,13 @@ apply from: 'gradle/eclipse.gradle'
 apply from: 'gradle/checkstyle.gradle'
 apply from: 'gradle/findbugs.gradle'
 
+repositories { mavenCentral() }
+
 dependencies {
-  compile 'com.google.code.findbugs:jsr305:2.0.1'
-  compile 'org.hamcrest:hamcrest-all:1.3'
+  compile 'com.google.code.findbugs:jsr305:3.0.0'
+  
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.hamcrest:hamcrest-all:1.3'
+  testCompile 'com.google.testing.compile:compile-testing:0.6'
+  testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 }

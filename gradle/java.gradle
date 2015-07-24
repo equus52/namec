@@ -51,34 +51,3 @@ dependencies {
   runtime fileTree(dir: 'lib/runtime', include: '**/*.jar', exclude: '**/*-sources.jar')
   testCompile fileTree(dir: 'lib/testCompile', include: '**/*.jar', exclude: '**/*-sources.jar')
 }
-
-// add depending projects' test sourceSets to test classpath
-compileTestJava {
-  doFirst {
-    project.getDependingProjects().each { dependingProject ->
-      project.sourceSets {
-        test.compileClasspath += dependingProject.sourceSets.test.output
-        test.runtimeClasspath += dependingProject.sourceSets.test.output
-
-        test.compileClasspath += dependingProject.sourceSets.test.compileClasspath
-        test.runtimeClasspath += dependingProject.sourceSets.test.runtimeClasspath
-      }
-    }
-  }
-}
-
-// copy environment config files for test
-processTestResources {
-  doLast {
-    project.getDependingAllProjects().each { project ->
-      copy {
-        from("${rootProject.buildDir}/${envRootName}/${defaultDir}/${project.name}")
-        into destinationDir
-      }
-      copy {
-        from("${rootProject.buildDir}/${envRootName}/${env}/${project.name}")
-        into destinationDir
-      }
-    }
-  }
-}

@@ -4,6 +4,10 @@ apply from: 'gradle/eclipse.gradle'
 apply from: 'gradle/checkstyle.gradle'
 apply from: 'gradle/findbugs.gradle'
 
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.5'
+}
+
 repositories { mavenCentral() }
 
 dependencies {

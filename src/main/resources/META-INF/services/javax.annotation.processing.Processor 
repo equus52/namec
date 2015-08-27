@@ -1,1 +1,1 @@
-equus.namec.annotation.processor.PropertyNameProcessor
+equus.namec.processor.GenerateNameProcessor

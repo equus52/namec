@@ -39,19 +39,19 @@ public class GenerateNameProcessorTest {
         "@Generated(\"equus.namec.processor.GenerateNameProcessor\")",//
         "public interface HogeName {",//
         "",//
-        "  public static final String PACKAGE_test = \"test\";",//
+        "  static String PACKAGE_test = \"test\";",//
         "",//
-        "  public static final String CLASS_FULL_test_Hoge = \"test.Hoge\";",//
-        "  public static final String CLASS_SIMPLE_Hoge = \"Hoge\";",//
+        "  static String CLASS_FULL_test_Hoge = \"test.Hoge\";",//
+        "  static String CLASS_SIMPLE_Hoge = \"Hoge\";",//
         "",//
-        "  public static final String FIELD_sample1 = \"sample1\";",//
+        "  static String FIELD_sample1 = \"sample1\";",//
         "",//
-        "  public static final String METHOD_getSample2 = \"getSample2\";",//
-        "  public static final String METHOD_isSample3 = \"isSample3\";",//
+        "  static String METHOD_getSample2 = \"getSample2\";",//
+        "  static String METHOD_isSample3 = \"isSample3\";",//
         "",//
-        "  public static final String PROPERTY_sample1 = \"sample1\";",//
-        "  public static final String PROPERTY_sample2 = \"sample2\";",//
-        "  public static final String PROPERTY_sample3 = \"sample3\";",//
+        "  static String PROPERTY_sample1 = \"sample1\";",//
+        "  static String PROPERTY_sample2 = \"sample2\";",//
+        "  static String PROPERTY_sample3 = \"sample3\";",//
         "",//
         "}"//
     );

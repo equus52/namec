@@ -118,24 +118,24 @@ public class GenerateNameProcessor extends AbstractProcessor {
     builder.append(String.format("@Generated(\"%s\")\n", this.getClass().getCanonicalName()));
     builder.append(String.format("public interface %s {\n", model.getGenerationClassName()));
     builder.append("\n");
-    builder.append(String.format("  public static final String PACKAGE_%s = \"%s\";\n", model.getCamelPackageName(),
+    builder.append(String.format("  static String PACKAGE_%s = \"%s\";\n", model.getCamelPackageName(),
         model.getPackageName()));
     builder.append("\n");
-    builder.append(String.format("  public static final String CLASS_FULL_%s = \"%s\";\n",
-        model.getCamelFullClassName(), model.getFullClassName()));
-    builder.append(String.format("  public static final String CLASS_SIMPLE_%s = \"%s\";\n",
-        model.getSimpleClassName(), model.getSimpleClassName()));
+    builder.append(String.format("  static String CLASS_FULL_%s = \"%s\";\n", model.getCamelFullClassName(),
+        model.getFullClassName()));
+    builder.append(String.format("  static String CLASS_SIMPLE_%s = \"%s\";\n", model.getSimpleClassName(),
+        model.getSimpleClassName()));
     builder.append("\n");
     for (String name : model.fieldList) {
-      builder.append(String.format("  public static final String FIELD_%s = \"%s\";\n", name, name));
+      builder.append(String.format("  static String FIELD_%s = \"%s\";\n", name, name));
     }
     builder.append("\n");
     for (String name : model.methodList) {
-      builder.append(String.format("  public static final String METHOD_%s = \"%s\";\n", name, name));
+      builder.append(String.format("  static String METHOD_%s = \"%s\";\n", name, name));
     }
     builder.append("\n");
     for (String name : model.propertyList) {
-      builder.append(String.format("  public static final String PROPERTY_%s = \"%s\";\n", name, name));
+      builder.append(String.format("  static String PROPERTY_%s = \"%s\";\n", name, name));
     }
     builder.append("\n}");
 

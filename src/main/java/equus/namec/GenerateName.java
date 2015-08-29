@@ -5,6 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This annotation generate a interface which has static string fields of description of the class annotated by this
+ * annotation.
+ */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface GenerateName {

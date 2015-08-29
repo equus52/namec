@@ -25,6 +25,10 @@ import javax.tools.JavaFileObject;
 
 import equus.namec.GenerateName;
 
+/**
+ * GenerateName generate a interface which has static string fields of description of the class annotated by
+ * GenerateName.
+ */
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes(GenerateName.CLASS_NAME)
 public class GenerateNameProcessor extends AbstractProcessor {

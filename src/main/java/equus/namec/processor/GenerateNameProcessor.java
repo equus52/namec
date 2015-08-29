@@ -112,31 +112,31 @@ public class GenerateNameProcessor extends AbstractProcessor {
 
   private String createJavaBody(Model model) {
     StringBuilder builder = new StringBuilder();
-    builder.append(String.format("package %s;\n", model.getPackageName()));
+    builder.append(String.format("package %s;%n", model.getPackageName()));
     builder.append("\n");
     builder.append("import javax.annotation.Generated;\n");
     builder.append("\n");
     builder.append("/**\n");
-    builder.append(String.format(" * @see %s\n", model.getSimpleClassName()));
+    builder.append(String.format(" * @see %s%n", model.getSimpleClassName()));
     builder.append(" */\n");
-    builder.append(String.format("@Generated(\"%s\")\n", this.getClass().getCanonicalName()));
-    builder.append(String.format("public interface %s {\n", model.getGenerationClassName()));
+    builder.append(String.format("@Generated(\"%s\")%n", this.getClass().getCanonicalName()));
+    builder.append(String.format("public interface %s {%n", model.getGenerationClassName()));
     builder.append("\n");
-    builder.append(String.format("  static String CLASS_CANONICAL = \"%s\";\n", model.getFullClassName()));
-    builder.append(String.format("  static String CLASS_SIMPLE = \"%s\";\n", model.getSimpleClassName()));
+    builder.append(String.format("  static String CLASS_CANONICAL = \"%s\";%n", model.getFullClassName()));
+    builder.append(String.format("  static String CLASS_SIMPLE = \"%s\";%n", model.getSimpleClassName()));
     builder.append("\n");
-    builder.append(String.format("  static String PACKAGE = \"%s\";\n", model.getPackageName()));
+    builder.append(String.format("  static String PACKAGE = \"%s\";%n", model.getPackageName()));
     builder.append("\n");
     for (String name : model.fieldList) {
-      builder.append(String.format("  static String FIELD_%s = \"%s\";\n", name, name));
+      builder.append(String.format("  static String FIELD_%s = \"%s\";%n", name, name));
     }
     builder.append("\n");
     for (String name : model.methodList) {
-      builder.append(String.format("  static String METHOD_%s = \"%s\";\n", name, name));
+      builder.append(String.format("  static String METHOD_%s = \"%s\";%n", name, name));
     }
     builder.append("\n");
     for (String name : model.propertyList) {
-      builder.append(String.format("  static String PROPERTY_%s = \"%s\";\n", name, name));
+      builder.append(String.format("  static String PROPERTY_%s = \"%s\";%n", name, name));
     }
     builder.append("\n}");
 

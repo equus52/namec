@@ -39,10 +39,10 @@ public class GenerateNameProcessorTest {
         "@Generated(\"equus.namec.processor.GenerateNameProcessor\")",//
         "public interface HogeName {",//
         "",//
-        "  static String PACKAGE_test = \"test\";",//
+        "  static String CLASS_CANONICAL = \"test.Hoge\";",//
+        "  static String CLASS_SIMPLE = \"Hoge\";",//
         "",//
-        "  static String CLASS_FULL_test_Hoge = \"test.Hoge\";",//
-        "  static String CLASS_SIMPLE_Hoge = \"Hoge\";",//
+        "  static String PACKAGE = \"test\";",//
         "",//
         "  static String FIELD_sample1 = \"sample1\";",//
         "",//

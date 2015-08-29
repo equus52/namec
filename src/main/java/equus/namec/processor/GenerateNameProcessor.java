@@ -118,13 +118,10 @@ public class GenerateNameProcessor extends AbstractProcessor {
     builder.append(String.format("@Generated(\"%s\")\n", this.getClass().getCanonicalName()));
     builder.append(String.format("public interface %s {\n", model.getGenerationClassName()));
     builder.append("\n");
-    builder.append(String.format("  static String PACKAGE_%s = \"%s\";\n", model.getCamelPackageName(),
-        model.getPackageName()));
+    builder.append(String.format("  static String CLASS_CANONICAL = \"%s\";\n", model.getFullClassName()));
+    builder.append(String.format("  static String CLASS_SIMPLE = \"%s\";\n", model.getSimpleClassName()));
     builder.append("\n");
-    builder.append(String.format("  static String CLASS_FULL_%s = \"%s\";\n", model.getCamelFullClassName(),
-        model.getFullClassName()));
-    builder.append(String.format("  static String CLASS_SIMPLE_%s = \"%s\";\n", model.getSimpleClassName(),
-        model.getSimpleClassName()));
+    builder.append(String.format("  static String PACKAGE = \"%s\";\n", model.getPackageName()));
     builder.append("\n");
     for (String name : model.fieldList) {
       builder.append(String.format("  static String FIELD_%s = \"%s\";\n", name, name));
@@ -154,20 +151,8 @@ public class GenerateNameProcessor extends AbstractProcessor {
       return processingEnv.getElementUtils().getPackageOf(element).getQualifiedName().toString();
     }
 
-    String getCamelPackageName() {
-      return toCamel(getPackageName());
-    }
-
     String getFullClassName() {
       return element.getQualifiedName().toString();
-    }
-
-    Object getCamelFullClassName() {
-      return toCamel(getFullClassName());
-    }
-
-    private String toCamel(String str) {
-      return str.replace('.', '_');
     }
 
     String getSimpleClassName() {

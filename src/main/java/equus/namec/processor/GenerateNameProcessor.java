@@ -8,13 +8,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -35,21 +36,22 @@ public class GenerateNameProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    for (Element element : roundEnv.getElementsAnnotatedWith(GenerateName.class)) {
-      Model model = createModel((TypeElement) element);
-      String javaBody = createJavaBody(model);
-      try {
-        JavaFileObject file = processingEnv.getFiler().createSourceFile(
-            model.getPackageName() + "." + model.getGenerationClassName(), element);
-        try (BufferedWriter writer = new BufferedWriter(file.openWriter())) {
-          writer.write(javaBody);
-          writer.flush();
-        }
-      } catch (IOException e) {
-        String trace = getStackTraceAsString(e);
-        processingEnv.getMessager().printMessage(Kind.ERROR, trace, element);
-      }
-    }
+    roundEnv.getElementsAnnotatedWith(GenerateName.class).forEach(
+        element -> {
+          Model model = createModel((TypeElement) element);
+          String javaBody = createJavaBody(model);
+          try {
+            JavaFileObject file = processingEnv.getFiler().createSourceFile(
+                model.getPackageName() + "." + model.getGenerationClassName(), element);
+            try (BufferedWriter writer = new BufferedWriter(file.openWriter())) {
+              writer.write(javaBody);
+              writer.flush();
+            }
+          } catch (IOException e) {
+            String trace = getStackTraceAsString(e);
+            processingEnv.getMessager().printMessage(Kind.ERROR, trace, element);
+          }
+        });
     return true;
   }
 
@@ -58,30 +60,30 @@ public class GenerateNameProcessor extends AbstractProcessor {
     model.element = element;
     model.annotation = element.getAnnotation(GenerateName.class);
 
-    for (VariableElement field : ElementFilter.fieldsIn(element.getEnclosedElements())) {
-      System.out.println("field: " + field);
-      Set<Modifier> modifiers = field.getModifiers();
-      if (modifiers.contains(Modifier.STATIC)) {
-        continue;
-      }
-      String fieldName = field.getSimpleName().toString();
-      model.fieldList.add(fieldName);
-      model.propertyList.add(fieldName);
-    }
-    for (ExecutableElement method : ElementFilter.methodsIn(element.getEnclosedElements())) {
-      System.out.println("method: " + method);
-      model.methodList.add(getMethodName(method));
-      Set<Modifier> modifiers = method.getModifiers();
-      if (modifiers.contains(Modifier.STATIC)) {
-        continue;
-      }
-      if (modifiers.contains(Modifier.PUBLIC) && isGetter(method)) {
-        String propertyName = getPropertyName(method);
-        model.propertyList.add(propertyName);
-      }
-    }
+    Stream<VariableElement> filterdFieldList = ElementFilter.fieldsIn(element.getEnclosedElements()).stream()
+        .filter(field -> !field.getModifiers().contains(Modifier.STATIC));
+    List<String> fieldNameList = filterdFieldList.map(field -> field.getSimpleName().toString()).collect(
+        Collectors.toList());
+    model.fieldList.addAll(fieldNameList);
+    model.propertyList.addAll(fieldNameList);
+
+    List<ExecutableElement> methodList = ElementFilter.methodsIn(element.getEnclosedElements());
+    List<String> methodNameList = methodList.stream().map(method -> getMethodName(method)).collect(Collectors.toList());
+    model.methodList.addAll(methodNameList);
+
+    List<String> propertyNameList = methodList.stream().filter(method -> isProperty(method))
+        .map(method -> getPropertyName(method)).collect(Collectors.toList());
+    model.propertyList.addAll(propertyNameList);
 
     return model;
+  }
+
+  private boolean isProperty(ExecutableElement method) {
+    Set<Modifier> modifiers = method.getModifiers();
+    if (modifiers.contains(Modifier.STATIC)) {
+      return false;
+    }
+    return modifiers.contains(Modifier.PUBLIC) && isGetter(method);
   }
 
   private boolean isGetter(ExecutableElement method) {

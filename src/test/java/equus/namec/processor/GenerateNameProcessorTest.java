@@ -13,48 +13,55 @@ public class GenerateNameProcessorTest {
 
   @Test
   public void test_1() {
-    JavaFileObject javaFile = JavaFileObjects.forSourceLines(//
-        "test.Hoge",//
-
-        "package test;",//
+    Lines inputLines = new Lines( //
+        "package com.test;",//
         "",//
         "import equus.namec.GenerateName;",//
         "",//
         "@GenerateName",//
-        "public class Hoge {",//
+        "public class Example {",//
         "",//
-        "  private String sample1;",//
-        "  public String getSample2(){return null;}",//
-        "  public boolean isSample3(){return false;}",//
+        "  private String field1;",//
         "",//
+        "  public String getField1(){",//
+        "    return field1;",//
+        "  }",//
+        "",//
+        "  public boolean isEmpty(){",//
+        "    return false;",//
+        "  }",//
         "}"//
     );
-    JavaFileObject expectedOutput = JavaFileObjects.forSourceLines(//
-        "test.Hoge_",//
+    JavaFileObject javaFile = JavaFileObjects.forSourceString("com.test.Example", inputLines.toString());
+    System.out.println("input:");
+    System.out.println(inputLines);
 
-        "package test;",//
+    Lines expectedLines = new Lines( //
+        "package com.test;",//
         "",//
         "import javax.annotation.Generated;",//
         "",//
         "@Generated(\"equus.namec.processor.GenerateNameProcessor\")",//
-        "public interface HogeName {",//
+        "public interface ExampleName {",//
         "",//
-        "  static String CLASS_CANONICAL = \"test.Hoge\";",//
-        "  static String CLASS_SIMPLE = \"Hoge\";",//
+        "  static String CLASS_CANONICAL = \"com.test.Example\";",//
+        "  static String CLASS_SIMPLE = \"Example\";",//
         "",//
-        "  static String PACKAGE = \"test\";",//
+        "  static String PACKAGE = \"com.test\";",//
         "",//
-        "  static String FIELD_sample1 = \"sample1\";",//
+        "  static String FIELD_field1 = \"field1\";",//
         "",//
-        "  static String METHOD_getSample2 = \"getSample2\";",//
-        "  static String METHOD_isSample3 = \"isSample3\";",//
+        "  static String METHOD_getField1 = \"getField1\";",//
+        "  static String METHOD_isEmpty = \"isEmpty\";",//
         "",//
-        "  static String PROPERTY_sample1 = \"sample1\";",//
-        "  static String PROPERTY_sample2 = \"sample2\";",//
-        "  static String PROPERTY_sample3 = \"sample3\";",//
+        "  static String PROPERTY_field1 = \"field1\";",//
+        "  static String PROPERTY_empty = \"empty\";",//
         "",//
         "}"//
     );
+    JavaFileObject expectedOutput = JavaFileObjects.forSourceString("com.test.ExampleName", expectedLines.toString());
+    System.out.println("expected:");
+    System.out.println(expectedLines);
 
     assert_().about(javaSource())//
         .that(javaFile)//
@@ -63,4 +70,16 @@ public class GenerateNameProcessorTest {
         .and().generatesSources(expectedOutput);
   }
 
+  static class Lines {
+    final String[] lines;
+
+    Lines(String... lines) {
+      this.lines = lines;
+    }
+
+    @Override
+    public String toString() {
+      return String.join(System.lineSeparator(), lines);
+    }
+  }
 }

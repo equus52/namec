@@ -5,22 +5,16 @@ apply plugin: 'java'
 def defaultEncoding = 'UTF-8'
 tasks.withType(AbstractCompile) each { it.options.encoding = defaultEncoding }
 test.systemProperty 'file.encoding', defaultEncoding
-javadoc { options.encoding = defaultEncoding }
 
 // Java version settings
 sourceCompatibility = jdkVersion
 targetCompatibility = jdkVersion
-tasks.withType(AbstractCompile) { options.bootClasspath = "${System.getProperty("java.home")}/lib/rt.jar" }
 
 // java dirctory as resources directory settings
 sourceSets.main.resources.srcDirs 'src/main/java'
 sourceSets.test.resources.srcDirs 'src/test/java'
 // config dirctory as resources directory settings
 sourceSets.test.resources.srcDirs mainConfigPath
-
-test {
-  forkEvery = 1
-}
 
 // jar settings
 jar {
@@ -44,6 +38,18 @@ task sourcesJar(type: Jar, dependsOn: classes) {
   }
 }
 artifacts { archives sourcesJar }
+
+// add provided scope
+configurations {
+  provided
+}
+
+// provided scope implements
+sourceSets {
+  main.compileClasspath += configurations.provided
+  test.compileClasspath += configurations.provided
+  test.runtimeClasspath += configurations.provided
+}
 
 // local dependencies settings
 dependencies {

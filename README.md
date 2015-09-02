@@ -52,11 +52,14 @@ public interface ExampleName {
 }
 ```
 
-You can change generated class name by setting suffix, prefix, or full class name.
+You can change generated class name by assigning suffix, prefix, or full class name.  
+See @GenerateName.
 
 ## Build
 
-`gradlew build`
+```
+gradlew build
+```
 
 
 ## Requirements
@@ -74,5 +77,5 @@ namec is released under the [MIT License](http://www.opensource.org/licenses/MIT
 
 #### Donations
 
-Your donation is great appreciated.
+Your donation is great appreciated.  
 PayPal: stepdesign81@gmail.com

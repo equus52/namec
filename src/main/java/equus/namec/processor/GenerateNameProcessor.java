@@ -9,7 +9,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -60,10 +59,9 @@ public class GenerateNameProcessor extends AbstractProcessor {
     model.element = element;
     model.annotation = element.getAnnotation(GenerateName.class);
 
-    Stream<VariableElement> filterdFieldList = ElementFilter.fieldsIn(element.getEnclosedElements()).stream()
-        .filter(field -> !field.getModifiers().contains(Modifier.STATIC));
-    List<String> fieldNameList = filterdFieldList.map(field -> field.getSimpleName().toString()).collect(
-        Collectors.toList());
+    List<VariableElement> fieldList = ElementFilter.fieldsIn(element.getEnclosedElements());
+    List<String> fieldNameList = fieldList.stream().map(field -> field.getSimpleName().toString())
+        .collect(Collectors.toList());
     model.fieldList.addAll(fieldNameList);
     model.propertyList.addAll(fieldNameList);
 

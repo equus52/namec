@@ -1,0 +1,20 @@
+// called from each project applying eclipse plugin
+apply plugin: 'eclipse'
+
+// JRE settings
+if (project.hasProperty('jreName')) {
+  eclipse.classpath {
+    containers.clear()
+    containers << 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/' + jreName
+    file {
+      beforeMerged { classpath ->
+        classpath.entries.removeAll { it.kind == 'con' && it.path.startsWith('org.eclipse.jdt.launching.JRE_CONTAINER') }
+      }
+    }
+  }
+}
+
+// provided scope implements
+eclipse.classpath {
+  plusConfigurations += [configurations.provided]
+}

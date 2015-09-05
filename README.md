@@ -15,7 +15,7 @@ import equus.namec.GenerateName;
 @GenerateName
 public class Example {
 
-  private String field1;
+  private final String field1 = "test";
 
   public String getField1(){
     return field1;

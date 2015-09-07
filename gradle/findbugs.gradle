@@ -3,7 +3,7 @@ apply plugin: 'findbugs'
 
 findbugs {
   // version setting
-  // toolVersion = '3.0.0'
+  toolVersion = '3.0.1'
   
   // effort setting
   effort = 'max'

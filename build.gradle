@@ -18,3 +18,11 @@ dependencies {
   testCompile 'com.google.testing.compile:compile-testing:0.6'
   testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 }
+
+assemble << {
+  copy {
+    from 'build/libs'
+    into 'namec-test/lib/compile'
+    include '**/*.jar'
+  }
+}

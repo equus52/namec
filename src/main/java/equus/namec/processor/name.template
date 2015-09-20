@@ -1,0 +1,25 @@
+package {{packageName}};
+
+import javax.annotation.Generated;
+
+@Generated("{{generated}}")
+public interface {{generationClassName}} {
+
+  static String CLASS_CANONICAL = "{{fullClassName}}";
+  static String CLASS_SIMPLE = "{{simpleClassName}}";
+
+  static String PACKAGE = "{{packageName}}";
+
+{{#each fieldList}}
+  static String FIELD_{{this}} = "{{this}}";
+{{/each}}
+
+{{#each methodList}}
+  static String METHOD_{{this}} = "{{this}}";
+{{/each}}
+
+{{#each propertyList}}
+  static String PROPERTY_{{this}} = "{{this}}";
+{{/each}}
+
+}

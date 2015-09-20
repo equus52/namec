@@ -82,4 +82,5 @@ public class GenerateNameProcessorTest {
       return String.join(System.lineSeparator(), lines);
     }
   }
+
 }

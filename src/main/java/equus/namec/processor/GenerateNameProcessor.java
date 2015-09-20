@@ -4,8 +4,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,9 +57,7 @@ public class GenerateNameProcessor extends AbstractProcessor {
   }
 
   private Model createModel(TypeElement element) {
-    Model model = new Model();
-    model.element = element;
-    model.annotation = element.getAnnotation(GenerateName.class);
+    Model model = new Model(processingEnv, element);
 
     List<VariableElement> fieldList = ElementFilter.fieldsIn(element.getEnclosedElements());
     List<String> fieldNameList = fieldList.stream().map(field -> field.getSimpleName().toString())
@@ -115,63 +111,8 @@ public class GenerateNameProcessor extends AbstractProcessor {
   }
 
   private String createJavaBody(Model model) {
-    StringBuilder builder = new StringBuilder();
-    builder.append(String.format("package %s;%n", model.getPackageName()));
-    builder.append("\n");
-    builder.append("import javax.annotation.Generated;\n");
-    builder.append("\n");
-    builder.append("/**\n");
-    builder.append(String.format(" * @see %s%n", model.getSimpleClassName()));
-    builder.append(" */\n");
-    builder.append(String.format("@Generated(\"%s\")%n", this.getClass().getCanonicalName()));
-    builder.append(String.format("public interface %s {%n", model.getGenerationClassName()));
-    builder.append("\n");
-    builder.append(String.format("  static String CLASS_CANONICAL = \"%s\";%n", model.getFullClassName()));
-    builder.append(String.format("  static String CLASS_SIMPLE = \"%s\";%n", model.getSimpleClassName()));
-    builder.append("\n");
-    builder.append(String.format("  static String PACKAGE = \"%s\";%n", model.getPackageName()));
-    builder.append("\n");
-    for (String name : model.fieldList) {
-      builder.append(String.format("  static String FIELD_%s = \"%s\";%n", name, name));
-    }
-    builder.append("\n");
-    for (String name : model.methodList) {
-      builder.append(String.format("  static String METHOD_%s = \"%s\";%n", name, name));
-    }
-    builder.append("\n");
-    for (String name : model.propertyList) {
-      builder.append(String.format("  static String PROPERTY_%s = \"%s\";%n", name, name));
-    }
-    builder.append("\n}");
-
-    return builder.toString();
-  }
-
-  class Model {
-    TypeElement element;
-    GenerateName annotation;
-
-    List<String> fieldList = new ArrayList<>();
-    LinkedHashSet<String> methodList = new LinkedHashSet<>();
-    LinkedHashSet<String> propertyList = new LinkedHashSet<>();
-
-    String getPackageName() {
-      return processingEnv.getElementUtils().getPackageOf(element).getQualifiedName().toString();
-    }
-
-    String getFullClassName() {
-      return element.getQualifiedName().toString();
-    }
-
-    String getSimpleClassName() {
-      return element.getSimpleName().toString();
-    }
-
-    String getGenerationClassName() {
-      if (!annotation.name().isEmpty()) {
-        return annotation.name();
-      }
-      return annotation.prefix() + getSimpleClassName() + annotation.suffix();
-    }
+    String text = Resources.loadText(this, "name.template");
+    Template template = new Template(text);
+    return template.apply(model);
   }
 }

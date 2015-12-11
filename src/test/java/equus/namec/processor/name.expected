@@ -1,0 +1,22 @@
+package cpm.hoge;
+
+import javax.annotation.Generated;
+
+@Generated("equus.namec.processor.TemplateTest")
+public interface equus.namec.processor.TemplateTest {
+
+  static String CLASS_CANONICAL = "com.hoge.HogeName";
+  static String CLASS_SIMPLE = "HogeName";
+
+  static String PACKAGE = "cpm.hoge";
+
+  static String FIELD_sample1 = "sample1";
+
+  static String METHOD_getSample2 = "getSample2";
+  static String METHOD_isSample3 = "isSample3";
+
+  static String PROPERTY_sample1 = "sample1";
+  static String PROPERTY_sample2 = "sample2";
+  static String PROPERTY_sample3 = "sample3";
+
+}

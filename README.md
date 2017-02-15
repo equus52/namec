@@ -76,9 +76,3 @@ gradlew build
 ### License
 
 namec is released under the [MIT License](http://www.opensource.org/licenses/MIT).
-
-
-#### Donations
-
-Your donation is great appreciated.  
-PayPal: stepdesign81@gmail.com
